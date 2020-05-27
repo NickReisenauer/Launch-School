@@ -130,4 +130,41 @@ We can chain flags together like `ls -la`.
 
 ## man command
 
-The `man` command will give us a user manual of sorts and contains all the possible flags and what they're used for and what the command itself is used for.
+The `man "command"` command will give us a user manual of sorts and contains all the possible flags and what they're used for and what the command itself is used for. `man ls`
+
+## mkdir command
+
+The `mkdir` command will create a new directory or directories.
+
+If we don't specify a path of where to create a new folder, it will make it wherever we are in the terminal.
+
+```bash
+mkdir Documents/GitHub/launch-school/hello-world
+or
+mkdir hello-world # If we are already in the launch-school directory
+```
+
+## rm command
+
+The `rm` command will permanently remove file/files.
+
+```bash
+rm /path/to/file
+or
+rm file.js file2.js
+```
+
+## rmdir command
+
+The `rmdir` command will remove empty directories. If the `-r` flag is added it will remove the folder and the files inside.
+
+```bash
+rmdir /empty/directory
+
+rmdir /notempty/directory
+Error: directory not empty
+
+rmdir -r /notempty/directory
+```
+
+---

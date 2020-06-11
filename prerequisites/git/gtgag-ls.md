@@ -106,3 +106,84 @@ git commit -m "Add first project files"
 To clarify what just happened, the `git commit` command commits all of the changes which we have staged into our repository. Each time you make a change to a file, you will need to stage the changes using the `git add <file>` command again. Being able to stage changes individually allows you to make lots of changes without worrying about committing them immediately. When you are ready, you can commit all the staged files all at once.
 
 #### git log
+
+Any time we want to see a commit history for our repo, we can do this using the `git log` command. This will print out a list of all the commits and who committed them and what time they were committed and the commit message.
+
+#### Summary
+
+| Command    | Description                                                                                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| git status | Run this command any time and often to check on the status of the files in the git repository.                                                                |
+| git add    | This command stages changed files, readying them to be wrapped into the next commit.                                                                          |
+| git commit | This command commits staged files, wrapping them into a commit. A historical record of commits is what we refer to as a codebase's version or commit history. |
+| git log    | View the repository's commit history.                                                                                                                         |
+
+---
+
+### Branching
+
+#### What is Branching?
+
+In git, a branch is a copy of all the files in your codebase. Each branch has an identifying name and its own set of version or commit history. When you create a new repository, the default branch is called `master`. Even if you do not create any additional branches, you'll be performing all git commands on a branch called `master`.
+
+#### Why Branch?
+
+A common reason for branching is that you are testing an experimental feature that you aren't sure if you're going to implement or if it's going to work but you want to test some code without ruining anything in the master codebase.
+
+To experiment like this you can create a new branch, or "fork" a existing branch, typically off of the master branch and that will act as its own repository until you decide to delete the branch or merge the test branch into the master branch.
+
+#### Local vs Remote
+
+It is important that you understand branches can exist both locally and on remote repositories (we'll get into remote repositories later). You can setup your local branches to `track` remote branches, which means they will automatically push and pull code to the tracked branch on the remote repository. While tracking a branch is possible, it is not required. We'll talk more about this when we talk about remote repositories.
+
+---
+
+### Summary
+
+#### Installation
+
+To start using git, just follow a few simple steps.
+
+1. Install git
+2. Configure identity (git config --global)
+3. Configure ignored files (.gitignore)
+
+#### Creating a Repo
+
+1. Create a project directory
+2. Initialize the git repository
+3. Create a .gitignore file
+4. git status
+5. Stage the changed files
+6. Commit the changes to our repository
+7. git log
+
+#### Command Reference
+
+- `git init`: Creates a new repository in the current directory. Generates a .git directory.
+- `git config`: Sets git configuration settings, such as author email and name.
+- `git status`: Shows the working directory as well as the staged changes. Run this command liberally to see which changes are ready for committing.
+- `git add <filename>`: Stage file changes, which prepares them to be added to the repository.
+- `git commit -m "message"`: Creates a commit from staged files. Commits are the atomic unit in git that gets moved around between branches and repositories.
+
+#### Local vs Remote Revisited
+
+Because git is a distributed version control system, one of the most confusing and also most important things to remember is the difference between local vs remote repositories. Local repositories are located on your computer, and remote repositories are located on a remote server. You will always issue git commands within a local git repository. Later, you will learn how to work with remote repositories from a local repository.
+
+---
+
+## Remote Repositories
+
+### Introduction
+
+Repositories not on our local machine are referred to as remote repositories. The local git repository can be made aware of the remote repositories, and can push or pull commits to/from remote repositories.
+
+#### Distributed vs Centralized
+
+In some server-client SCM systems, developers are always working with the server, which acts as the central repository for all developers on a team. The server hosted code acts as the single source of truth for your project codebase, and team members commit directly to the server.
+
+In practice, however, team-based projects require some sort of centralized control. This is where Github.com comes in. Most teams work with local copies of the codebase, but use the Github.com hosted repository as the "centralized" repository, where it acts as the single source of truth for the entire codebase.
+
+---
+
+### GitHub

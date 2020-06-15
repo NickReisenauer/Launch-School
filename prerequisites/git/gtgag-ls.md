@@ -187,3 +187,45 @@ In practice, however, team-based projects require some sort of centralized contr
 ---
 
 ### GitHub
+
+To connect to our local repository to our remote repository, we first need to create a GitHub account and a GitHub repository for our project.
+
+#### Connecting to GitHub
+
+```bash
+git remote add origin git@github.com:NickReisenauer/LS-Test.git
+git push -u origin master
+```
+
+[git origin](https://d186loudes4jlv.cloudfront.net/git/images/git_remote_add.jpg)
+
+[git push -u](https://d186loudes4jlv.cloudfront.net/git/images/git_push.jpg)
+
+#### git clone
+
+So far, we have been talking about connecting an existing remote repository with an existing local repository. But what if we don't have an existing local repository, and just want to pull down all the contents of a remote repository? This is where git clone comes in. It makes an exact clone of an existing remote repository, and copies it onto your local machine. The cloned local repository will include all the files, commit history, branches, and everything else associated to that git repository.
+
+```bash
+$ git clone <remote repository url> <local directory name>
+```
+
+- `git init`: Create a new local repository
+- `git remote add origin <remote url>`: Add an existing remote repo as a remote of existing local repo
+- `git clone <remote url>`: Pull down contents of existing remote repo into a new local repo, and add a remote to the local repo pointing to the remote repo
+
+#### Summary
+
+- First, we created a repository on Github.com, and chose not to initialize it with any files, leaving it a blank slate.
+- Next, we made our local repo aware of our newly created remote repo with `git remote add origin <url>`.
+- Then, we pushed some commits from our local repo to our remote Github.com repo using `git push`.
+- We then made a modification on Github.com directly, simulating a coworker pushing commits to our remote Github.com repo.
+- Finally, we pulled those commits down to our local repository using `git pull`, syncing up our local repo with our remote repo.
+- We also learned what `git clone` is, and how you would use it to work on an existing git repository.
+
+---
+
+### Conclusion
+
+[Cheat Sheets](https://launchschool.com/books/git/read/cheatsheets)
+
+---

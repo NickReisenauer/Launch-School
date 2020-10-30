@@ -1,22 +1,75 @@
 const readline = require("readline-sync");
+const MESSAGES = require("./calculator_messages.json");
 
-console.log("Welcome to Calculator!");
+const prompt = (message) => console.log(`${message}`);
 
-console.log("What's the first number?");
-const number1 = Number(readline.question());
+const isInvalidNumber = (number) => {
+  return number.trimStart() === "" || Number.isNaN(Number(number));
+};
 
-console.log("What's the second number?");
-const number2 = Number(readline.question());
+while (true) {
+  console.clear();
 
-console.log(
-  "What operation would you like to perform?\n1: Add 2: Subtract 3: Multiply 4: Divide"
-);
-const operation = readline.question();
+  prompt(MESSAGES["en"].languageSelect);
+  let language = readline.question().toLowerCase();
 
-let output;
-if (operation === "1") output = number1 + number2;
-else if (operation === "2") output = number1 - number2;
-else if (operation === "3") output = number1 * number2;
-else if (operation === "4") output = number1 / number2;
+  while (language !== "en" && language !== "es") {
+    prompt(MESSAGES["en"].languageSelect);
+    language = readline.question();
+  }
 
-console.log(`The result is: ${output}`);
+  prompt(MESSAGES[language].welcome);
+
+  prompt(MESSAGES[language].firstNumber);
+  let number1 = readline.question();
+
+  while (isInvalidNumber(number1)) {
+    prompt(MESSAGES[language].invalidNumber);
+    number1 = readline.question();
+  }
+
+  prompt(MESSAGES[language].secondNumber);
+  let number2 = readline.question();
+
+  while (isInvalidNumber(number2)) {
+    prompt(MESSAGES[language].invalidNumber);
+    number2 = readline.question();
+  }
+
+  prompt(MESSAGES[language].operationType);
+  let operation = readline.question();
+
+  while (!["1", "2", "3", "4"].includes(operation)) {
+    prompt(MESSAGES[language].invalidOperation);
+    operation = readline.question();
+  }
+
+  let output;
+  number1 = Number(number1);
+  number2 = Number(number2);
+  switch (operation) {
+    case "1":
+      output = number1 + number2;
+      break;
+    case "2":
+      output = number1 - number2;
+      break;
+    case "3":
+      output = number1 * number2;
+      break;
+    case "4":
+      output = number1 / number2;
+      break;
+  }
+
+  prompt(MESSAGES[language].result + output);
+
+  prompt(MESSAGES[language].anotherCalculation);
+  let decision = readline.question().toLowerCase();
+
+  while (decision !== "n" && decision !== "y") {
+    prompt(MESSAGES[language].invalidDecision);
+    decision = readline.question().toLowerCase();
+  }
+  if (decision === "n") break;
+}

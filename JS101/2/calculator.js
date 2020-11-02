@@ -7,9 +7,7 @@ const isInvalidNumber = (number) => {
   return number.trimStart() === "" || Number.isNaN(Number(number));
 };
 
-while (true) {
-  console.clear();
-
+const selectLanguage = () => {
   prompt(MESSAGES["en"].languageSelect);
   let language = readline.question().toLowerCase();
 
@@ -17,6 +15,35 @@ while (true) {
     prompt(MESSAGES["en"].languageSelect);
     language = readline.question().toLowerCase();
   }
+  if (language === "en") return "en";
+  return "es";
+};
+
+const calculateResult = (number1, number2, operation) => {
+  let output;
+  number1 = Number(number1);
+  number2 = Number(number2);
+  switch (operation) {
+    case "1":
+      output = number1 + number2;
+      break;
+    case "2":
+      output = number1 - number2;
+      break;
+    case "3":
+      output = number1 * number2;
+      break;
+    case "4":
+      output = number1 / number2;
+      break;
+  }
+  return output;
+};
+
+let language = selectLanguage();
+
+while (true) {
+  console.clear();
 
   prompt(MESSAGES[language].welcome);
 
@@ -44,25 +71,13 @@ while (true) {
     operation = readline.question();
   }
 
-  let output;
-  number1 = Number(number1);
-  number2 = Number(number2);
-  switch (operation) {
-    case "1":
-      output = number1 + number2;
-      break;
-    case "2":
-      output = number1 - number2;
-      break;
-    case "3":
-      output = number1 * number2;
-      break;
-    case "4":
-      output = number1 / number2;
-      break;
-  }
+  let output = calculateResult(number1, number2, operation);
 
-  prompt(MESSAGES[language].result + output);
+  if (isNaN(output)) {
+    prompt(MESSAGES[language].isNaN);
+  } else {
+    prompt(MESSAGES[language].result + output);
+  }
 
   prompt(MESSAGES[language].anotherCalculation);
   let decision = readline.question().toLowerCase();
@@ -71,5 +86,8 @@ while (true) {
     prompt(MESSAGES[language].invalidDecision);
     decision = readline.question().toLowerCase();
   }
-  if (decision === "n") break;
+  if (decision === "n") {
+    prompt("Thanks for using the calculator!");
+    break;
+  }
 }

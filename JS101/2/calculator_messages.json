@@ -9,7 +9,8 @@
     "anotherCalculation": "Would you like to perform another calculation? Y: Yes. N: No.",
     "invalidNumber": "Hmm... that doesn't look like a valid number.",
     "invalidOperation": "Must choose 1, 2, 3 or 4",
-    "invalidDecision": "Please input either Y: Yes. or N: No."
+    "invalidDecision": "Please input either Y: Yes. or N: No.",
+    "isNaN": "The result is not a valid number. Please try another calculation."
   },
   "es": {
     "welcome": "Bienvenido a la calculadora",
@@ -20,6 +21,7 @@
     "anotherCalculation": "¿Le gustaría realizar otro cálculo? Y: Si. N: No.",
     "invalidNumber": "Hmm ... eso no parece un número válido.",
     "invalidOperation": "Debe elegir 1, 2, 3 o 4",
-    "invalidDecision": "Por favor ingrese Y: Sí. o N: No."
+    "invalidDecision": "Por favor ingrese Y: Sí. o N: No.",
+    "isNaN": "El resultado no es un número válido. Intente otro cálculo."
   }
 }

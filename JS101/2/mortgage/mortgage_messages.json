@@ -1,0 +1,7 @@
+{
+  "welcome": "Hello, welcome to the mortgage calculator!",
+  "APRInput": "Please input your Annual Percentage Rate (APR):",
+  "loanAmount": "Please input your loan amount:",
+  "loanDuration": "Please input your loan duration (in years):",
+  "invalidNumber": "Please input a valid number:"
+}

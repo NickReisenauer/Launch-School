@@ -87,7 +87,7 @@ while (true) {
     decision = readline.question().toLowerCase();
   }
   if (decision === "n") {
-    prompt("Thanks for using the calculator!");
+    prompt(MESSAGES[language].goodbye);
     break;
   }
 }

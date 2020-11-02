@@ -1,7 +1,7 @@
 const readline = require("readline-sync");
 const MESSAGES = require("./calculator_messages.json");
 
-const prompt = (message) => console.log(`${message}`);
+const prompt = (message) => console.log(`=> ${message}`);
 
 const isInvalidNumber = (number) => {
   return number.trimStart() === "" || Number.isNaN(Number(number));
@@ -15,7 +15,7 @@ while (true) {
 
   while (language !== "en" && language !== "es") {
     prompt(MESSAGES["en"].languageSelect);
-    language = readline.question();
+    language = readline.question().toLowerCase();
   }
 
   prompt(MESSAGES[language].welcome);

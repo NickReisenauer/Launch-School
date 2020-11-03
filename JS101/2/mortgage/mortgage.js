@@ -43,3 +43,4 @@ let result =
 prompt(`Monthly Payments: $${result.toFixed(2)}`);
 // Input validation
 // Convert everything to a number below
+// result => function

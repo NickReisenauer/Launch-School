@@ -1,7 +1,10 @@
 {
   "welcome": "Hello, welcome to the mortgage calculator!",
-  "APRInput": "Please input your Annual Percentage Rate (APR):",
+  "APRInput": "Please input your Annual Percentage Rate (APR)\n5 for 5%, 10 for 10%, etc:",
   "loanAmount": "Please input your loan amount:",
   "loanDuration": "Please input your loan duration (in years):",
-  "invalidNumber": "Please input a valid number:"
+  "invalidNumber": "Please input a valid number greater than 0:",
+  "anotherCalculation": "Would you like to perform another calculation?\nY: yes. N: no.",
+  "invalidDecision": "Please select either Y: yes. or N: no.",
+  "goodbye": "Thank you for using the mortgage calculator!"
 }

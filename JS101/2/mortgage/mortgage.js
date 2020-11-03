@@ -1,46 +1,86 @@
 const readline = require("readline-sync");
 const MESSAGES = require("./mortgage_messages.json");
 
-const prompt = (message) => console.log(`=> ${message}`);
+const MONTHS = 12;
+
+const prompt = (message) => console.log(`-> ${message}`);
+
 const isInvalidNumber = (number) => {
-  return number.trimStart() === "" || Number.isNaN(Number(number));
+  return (
+    number.trimStart() === "" || Number.isNaN(Number(number)) || number < 1
+  );
 };
 
-console.clear();
-prompt(MESSAGES.welcome);
+const calculateResult = (loanAmount, monthlyPercentageRate, monthDuration) => {
+  return (
+    loanAmount *
+    (monthlyPercentageRate /
+      (1 - Math.pow(1 + monthlyPercentageRate, -Number(monthDuration))))
+  );
+};
 
-prompt(MESSAGES.loanAmount);
-let loanAmount = readline.question("");
-while (isInvalidNumber(loanAmount)) {
-  prompt(MESSAGES.invalidNumber);
-  loanAmount = readline.question();
+const formatDollarResult = (result) => {
+  return Number(result.toFixed(2)).toLocaleString();
+};
+
+const anotherCalculation = () => {
+  console.log("\n");
+  prompt(MESSAGES.anotherCalculation);
+  let decision = readline.question().toLowerCase();
+
+  while (decision !== "n" && decision !== "y") {
+    prompt(MESSAGES.invalidDecision);
+    decision = readline.question().toLowerCase();
+  }
+  if (decision === "n") {
+    prompt(MESSAGES.goodbye);
+    return "n";
+  }
+  return "y";
+};
+
+while (true) {
+  console.clear();
+  prompt(MESSAGES.welcome);
+
+  prompt(MESSAGES.loanAmount);
+  let loanAmount = readline.question("$");
+  while (isInvalidNumber(loanAmount)) {
+    prompt(MESSAGES.invalidNumber);
+    loanAmount = readline.question("$");
+  }
+
+  prompt(MESSAGES.APRInput);
+  let percentageRate = readline.question();
+  while (isInvalidNumber(percentageRate)) {
+    prompt(MESSAGES.invalidNumber);
+    percentageRate = readline.question();
+  }
+
+  prompt(MESSAGES.loanDuration);
+  let loanDuration = readline.question();
+  while (isInvalidNumber(loanDuration)) {
+    prompt(MESSAGES.invalidNumber);
+    loanDuration = readline.question();
+  }
+
+  let annualPercentageRate = Number(percentageRate) / 100;
+  let monthlyPercentageRate = Number(annualPercentageRate) / MONTHS;
+  let monthDuration = Number(loanDuration) * MONTHS;
+  loanAmount = Number(loanAmount);
+
+  let result = calculateResult(
+    loanAmount,
+    monthlyPercentageRate,
+    monthDuration
+  );
+
+  prompt(
+    `Monthly Payments:\nOver ${monthDuration.toLocaleString()} months, pay $${formatDollarResult(
+      result
+    )} per month`
+  );
+
+  let playAgain = anotherCalculation();
+  if (playAgain === "n") break;
 }
-
-prompt(MESSAGES.APRInput);
-let percentageRate = readline.question();
-while (isInvalidNumber(percentageRate)) {
-  prompt(MESSAGES.invalidNumber);
-  percentageRate = readline.question();
-}
-
-prompt(MESSAGES.loanDuration);
-let loanDuration = readline.question();
-while (isInvalidNumber(loanDuration) || loanDuration <= 0) {
-  prompt(MESSAGES.invalidNumber);
-  loanDuration = readline.question();
-}
-
-let annualPercentageRate = Number(percentageRate) / 100;
-let monthlyPercentageRate = Number(annualPercentageRate) / 12;
-let monthDuration = Number(loanDuration) * 12;
-loanAmount = Number(loanAmount);
-
-let result =
-  loanAmount *
-  (monthlyPercentageRate /
-    (1 - Math.pow(1 + monthlyPercentageRate, -Number(monthDuration))));
-
-prompt(`Monthly Payments: $${result.toFixed(2)}`);
-// Input validation
-// Convert everything to a number below
-// result => function

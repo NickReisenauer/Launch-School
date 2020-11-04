@@ -23,6 +23,14 @@ const formatDollarResult = (result) => {
   return Number(result.toFixed(2)).toLocaleString();
 };
 
+const logResult = (monthDuration, result) => {
+  return console.log(
+    `-> Monthly Payments:\nOver ${monthDuration.toLocaleString()} months, pay $${formatDollarResult(
+      result
+    )} per month`
+  );
+};
+
 const anotherCalculation = () => {
   console.log("\n");
   prompt(MESSAGES.anotherCalculation);
@@ -75,11 +83,8 @@ while (true) {
     monthDuration
   );
 
-  prompt(
-    `Monthly Payments:\nOver ${monthDuration.toLocaleString()} months, pay $${formatDollarResult(
-      result
-    )} per month`
-  );
+  console.log("\n");
+  logResult(monthDuration, result);
 
   let playAgain = anotherCalculation();
   if (playAgain === "n") break;

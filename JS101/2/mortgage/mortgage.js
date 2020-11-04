@@ -7,8 +7,38 @@ const prompt = (message) => console.log(`-> ${message}`);
 
 const isInvalidNumber = (number) => {
   return (
-    number.trimStart() === "" || Number.isNaN(Number(number)) || number < 1
+    number.trimStart() === "" || Number.isNaN(Number(number)) || number < 0
   );
+};
+
+const isInvalidDuration = (number) => {
+  let num = Number(number);
+  return !Number.isInteger(num);
+};
+
+const retrieveInput = (message, inputCheck, errorMessage) => {
+  prompt(message);
+  let input = readline.question();
+  while (inputCheck(input)) {
+    prompt(errorMessage);
+    input = readline.question();
+  }
+  return input;
+};
+
+const retrieveDurationInput = (
+  message,
+  numberCheck,
+  durationCheck,
+  errorMessage
+) => {
+  prompt(message);
+  let input = readline.question();
+  while (numberCheck(input) || durationCheck(input)) {
+    prompt(errorMessage);
+    input = readline.question();
+  }
+  return input;
 };
 
 const calculateResult = (loanAmount, monthlyPercentageRate, monthDuration) => {
@@ -51,26 +81,24 @@ while (true) {
   console.clear();
   prompt(MESSAGES.welcome);
 
-  prompt(MESSAGES.loanAmount);
-  let loanAmount = readline.question("$");
-  while (isInvalidNumber(loanAmount)) {
-    prompt(MESSAGES.invalidNumber);
-    loanAmount = readline.question("$");
-  }
+  let loanAmount = retrieveInput(
+    MESSAGES.loanAmount,
+    isInvalidNumber,
+    MESSAGES.invalidNumber
+  );
 
-  prompt(MESSAGES.APRInput);
-  let percentageRate = readline.question();
-  while (isInvalidNumber(percentageRate)) {
-    prompt(MESSAGES.invalidNumber);
-    percentageRate = readline.question();
-  }
+  let percentageRate = retrieveInput(
+    MESSAGES.APRInput,
+    isInvalidNumber,
+    MESSAGES.invalidNumber
+  );
 
-  prompt(MESSAGES.loanDuration);
-  let loanDuration = readline.question();
-  while (isInvalidNumber(loanDuration)) {
-    prompt(MESSAGES.invalidNumber);
-    loanDuration = readline.question();
-  }
+  let loanDuration = retrieveDurationInput(
+    MESSAGES.loanDuration,
+    isInvalidNumber,
+    isInvalidDuration,
+    MESSAGES.invalidDuration
+  );
 
   let annualPercentageRate = Number(percentageRate) / 100;
   let monthlyPercentageRate = Number(annualPercentageRate) / MONTHS;
@@ -86,6 +114,5 @@ while (true) {
   console.log("\n");
   logResult(monthDuration, result);
 
-  let playAgain = anotherCalculation();
-  if (playAgain === "n") break;
+  if (anotherCalculation() === "n") break;
 }

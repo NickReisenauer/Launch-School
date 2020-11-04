@@ -5,6 +5,7 @@
   "loanDuration": "Please input your loan duration (in years):",
   "invalidNumber": "Please input a valid number greater than 0:",
   "anotherCalculation": "Would you like to perform another calculation?\nY: yes. N: no.",
+  "invalidDuration": "Please input the duration in years as a whole number",
   "invalidDecision": "Please select either Y: yes. or N: no.",
   "goodbye": "Thank you for using the mortgage calculator!"
 }

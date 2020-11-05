@@ -11,6 +11,33 @@ let winningScore = 5;
 
 const prompt = (message) => console.log(`-> ${message}`);
 
+const displayWelcomeMessage = () => {
+  prompt(`Welcome to Rock Paper Scissors vs The Computer!`);
+  prompt(`First to score ${winningScore} wins.`);
+  prompt(`Good luck! 👍`);
+};
+
+const displayRoundChoices = () => {
+  console.log("\n");
+  prompt(`------ | Round ${roundNumber} | ------`);
+  prompt(`Choose one: ${VALID_CHOICES.join(", ")}`);
+};
+
+const getUserChoice = () => {
+  let choice = readline.question().toLowerCase();
+  while (!VALID_CHOICES.includes(choice)) {
+    prompt("That's not a valid choice");
+    choice = readline.question().toLowerCase();
+  }
+  return choice;
+};
+
+const getComputerChoice = () => {
+  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
+  let computerChoice = VALID_CHOICES[randomIndex];
+  return computerChoice;
+};
+
 const updateRoundScore = (roundWinner) => {
   gameScore[roundWinner] += 1;
 };
@@ -35,11 +62,17 @@ const displayRoundWinner = (choice, computerChoice) => {
   }
 };
 
-const declareWinner = () => {
+const isAWinner = () => {
+  return (
+    gameScore.human === winningScore || gameScore.computer === winningScore
+  );
+};
+
+const displayWinnerOfGame = () => {
   if (gameScore.human === 5) {
     console.log("\n");
     prompt(
-      `Congrats! You Won!\nThe score was ${gameScore.human} to ${gameScore.computer}`
+      `Congrats! You Won! 🥳\nThe score was ${gameScore.human} to ${gameScore.computer}`
     );
   } else {
     console.log("\n");
@@ -49,7 +82,7 @@ const declareWinner = () => {
   }
 };
 
-const resetGame = () => {
+const resetGameScore = () => {
   gameScore.human = 0;
   gameScore.computer = 0;
   roundNumber = 0;
@@ -68,40 +101,32 @@ const playAgain = () => {
     prompt("Thanks for playing!");
     return "n";
   }
+  console.clear();
   return "y";
 };
 
 console.clear();
 
-while (true) {
-  console.log("\n");
-  console.log(`--- Round ${roundNumber} | First to score 5 ---`);
-  prompt(`Choose one: ${VALID_CHOICES.join(", ")}`);
-  let choice = readline.question().toLowerCase();
-  while (!VALID_CHOICES.includes(choice)) {
-    prompt("That's not a valid choice");
-    choice = readline.question().toLowerCase();
-  }
+displayWelcomeMessage();
 
-  let randomIndex = Math.floor(Math.random() * VALID_CHOICES.length);
-  let computerChoice = VALID_CHOICES[randomIndex];
+while (true) {
+  displayRoundChoices();
+
+  let choice = getUserChoice();
+  let computerChoice = getComputerChoice();
+
+  console.clear();
 
   prompt(`You chose ${choice}, computer chose ${computerChoice}`);
   displayRoundWinner(choice, computerChoice);
   prompt(`SCORE: You: ${gameScore.human} vs Computer: ${gameScore.computer}`);
 
-  if (gameScore.human === winningScore || gameScore.computer === winningScore) {
-    declareWinner();
-    resetGame();
-    let anotherGame = playAgain();
-    if (anotherGame === "n") break;
+  if (isAWinner()) {
+    displayWinnerOfGame();
+    resetGameScore();
+    let answer = playAgain();
+    if (answer === "n") break;
   }
+
   roundNumber += 1;
 }
-
-// Best of 5
-// Keep track of scoring
-// Display score at start of each round
-// Countdown timer
-// Check for who's won and display a message
-// Instead of 5, use var winningScore

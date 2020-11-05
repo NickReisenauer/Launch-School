@@ -77,6 +77,8 @@ const anotherCalculation = () => {
   return "y";
 };
 
+const isPlayAgain = (answer) => answer === "y";
+
 while (true) {
   console.clear();
   prompt(MESSAGES.welcome);
@@ -114,5 +116,6 @@ while (true) {
   console.log("\n");
   logResult(monthDuration, result);
 
-  if (anotherCalculation() === "n") break;
+  let playAgain = anotherCalculation();
+  if (!isPlayAgain(playAgain)) break;
 }

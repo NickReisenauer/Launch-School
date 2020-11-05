@@ -1,6 +1,7 @@
 const readline = require("readline-sync");
 
 const VALID_CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
+
 const SHORTHAND_CHOICES = ["r", "p", "sc", "l", "sp"];
 
 const WINNING_COMBOS = {

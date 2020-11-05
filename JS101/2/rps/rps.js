@@ -1,6 +1,16 @@
 const readline = require("readline-sync");
 
-const VALID_CHOICES = ["rock", "paper", "scissors"];
+const VALID_CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
+const SHORTHAND_CHOICES = ["r", "p", "sc", "l", "sp"];
+
+const WINNING_COMBOS = {
+  rock: ["scissors", "lizard"],
+  paper: ["rock", "spock"],
+  scissors: ["paper", "lizard"],
+  lizard: ["paper", "spock"],
+  spock: ["rock", "scissors"],
+};
+
 const gameScore = {
   computer: 0,
   human: 0,
@@ -20,15 +30,27 @@ const displayWelcomeMessage = () => {
 const displayRoundChoices = () => {
   console.log("\n");
   prompt(`------ | Round ${roundNumber} | ------`);
-  prompt(`Choose one: ${VALID_CHOICES.join(", ")}`);
+  prompt(
+    `Choose one: [r]: rock, [p]: paper, [sc]: scissors, [l]: lizard, [sp]: spock`
+  );
+};
+
+const shorthandChoiceValidation = (choice) => {
+  if (choice[0] === "r") choice = "rock";
+  else if (choice[0] === "p") choice = "paper";
+  else if (choice.substring(0, 2) === "sc") choice = "scissors";
+  else if (choice[0] === "l") choice = "lizard";
+  else if (choice.substring(0, 2) === "sp") choice = "spock";
+  return choice;
 };
 
 const getUserChoice = () => {
   let choice = readline.question().toLowerCase();
-  while (!VALID_CHOICES.includes(choice)) {
+  while (!SHORTHAND_CHOICES.includes(choice)) {
     prompt("That's not a valid choice");
     choice = readline.question().toLowerCase();
   }
+  choice = shorthandChoiceValidation(choice);
   return choice;
 };
 
@@ -43,22 +65,14 @@ const updateRoundScore = (roundWinner) => {
 };
 
 const displayRoundWinner = (choice, computerChoice) => {
-  if (
-    (choice === "rock" && computerChoice === "scissors") ||
-    (choice === "paper" && computerChoice === "rock") ||
-    (choice === "scissors" && computerChoice === "paper")
-  ) {
+  if (WINNING_COMBOS[choice].includes(computerChoice)) {
     prompt("You win this round!");
     updateRoundScore("human");
-  } else if (
-    (choice === "rock" && computerChoice === "paper") ||
-    (choice === "paper" && computerChoice === "scissors") ||
-    (choice === "scissors" && computerChoice === "rock")
-  ) {
+  } else if (computerChoice === choice) {
+    prompt("This round was a tie");
+  } else {
     prompt("Computer wins this round");
     updateRoundScore("computer");
-  } else {
-    prompt("This round was a tie");
   }
 };
 

@@ -2,7 +2,13 @@ const readline = require("readline-sync");
 
 const VALID_CHOICES = ["rock", "paper", "scissors", "lizard", "spock"];
 
-const SHORTHAND_CHOICES = ["r", "p", "sc", "l", "sp"];
+const SHORTHAND_CHOICES = {
+  r: "rock",
+  p: "paper",
+  sc: "scissors",
+  l: "lizard",
+  sp: "spock",
+};
 
 const WINNING_COMBOS = {
   rock: ["scissors", "lizard"],
@@ -17,8 +23,8 @@ const gameScore = {
   human: 0,
 };
 
+let winningScore;
 let roundNumber = 1;
-let winningScore = 5;
 
 const prompt = (message) => console.log(`-> ${message}`);
 
@@ -26,6 +32,18 @@ const displayWelcomeMessage = () => {
   prompt(`Welcome to Rock Paper Scissors vs The Computer!`);
   prompt(`First to score ${winningScore} wins.`);
   prompt(`Good luck! 👍`);
+};
+
+const getWinningScoreInput = () => {
+  prompt("How many rounds would you like to play?");
+  prompt("Choose between 1 - 10.");
+  let answer = Number(readline.question());
+  while (answer < 1 || answer > 10 || !Number.isInteger(answer)) {
+    prompt("Choose between 1 - 10.");
+    answer = Number(readline.question());
+  }
+  console.clear();
+  return answer;
 };
 
 const displayRoundChoices = () => {
@@ -36,22 +54,13 @@ const displayRoundChoices = () => {
   );
 };
 
-const shorthandChoiceValidation = (choice) => {
-  if (choice[0] === "r") choice = "rock";
-  else if (choice[0] === "p") choice = "paper";
-  else if (choice.substring(0, 2) === "sc") choice = "scissors";
-  else if (choice[0] === "l") choice = "lizard";
-  else if (choice.substring(0, 2) === "sp") choice = "spock";
-  return choice;
-};
-
 const getUserChoice = () => {
   let choice = readline.question().toLowerCase();
-  while (!SHORTHAND_CHOICES.includes(choice)) {
+  while (!Object.keys(SHORTHAND_CHOICES).includes(choice)) {
     prompt("That's not a valid choice");
     choice = readline.question().toLowerCase();
   }
-  choice = shorthandChoiceValidation(choice);
+  choice = SHORTHAND_CHOICES[choice];
   return choice;
 };
 
@@ -84,7 +93,7 @@ const isAWinner = () => {
 };
 
 const displayWinnerOfGame = () => {
-  if (gameScore.human === 5) {
+  if (gameScore.human === winningScore) {
     console.log("\n");
     prompt(
       `Congrats! You Won! 🥳\nThe score was ${gameScore.human} to ${gameScore.computer}`
@@ -114,14 +123,15 @@ const playAgain = () => {
   }
   if (decision === "n") {
     prompt("Thanks for playing!");
-    return "n";
+    return decision;
   }
   console.clear();
-  return "y";
+  return decision;
 };
 
 console.clear();
 
+winningScore = getWinningScoreInput();
 displayWelcomeMessage();
 
 while (true) {

@@ -49,7 +49,6 @@ const determineFirstPlayer = () => {
 };
 
 const initializeBoard = () => {
-  currentPlayer = firstPlayer;
   let board = {};
 
   for (let square = 1; square <= 9; square++) {
@@ -134,21 +133,23 @@ const computerChoosesRandom = (board) => {
   return square;
 };
 
+const computerFindsAtRiskSquareLoop = (board, marker) => {
+  let square;
+  for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
+    let line = WINNING_LINES[idx];
+    square = findAtRiskSquare(line, board, marker);
+    if (square) break;
+  }
+  return square;
+};
+
 const computerChoosesSquare = (board) => {
   let square;
 
-  for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
-    let line = WINNING_LINES[idx];
-    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
-    if (square) break;
-  }
+  square = computerFindsAtRiskSquareLoop(board, COMPUTER_MARKER);
 
   if (!square) {
-    for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
-      let line = WINNING_LINES[idx];
-      square = findAtRiskSquare(line, board, HUMAN_MARKER);
-      if (square) break;
-    }
+    square = computerFindsAtRiskSquareLoop(board, HUMAN_MARKER);
   }
 
   if (!square && board["5"] === INITIAL_MARKER) square = "5";
@@ -179,13 +180,16 @@ const detectWinner = (board) => {
   return null;
 };
 
-const someoneWonRound = (board) => detectWinner(board);
+const someoneWonRound = (board) => !!detectWinner(board);
 
 const updateScore = (score, winner) => (score[winner] += 1);
 
 const chooseSquare = (board) => {
-  if (currentPlayer === "Player") playerChoosesSquare(board);
-  else computerChoosesSquare(board);
+  if (currentPlayer === "Player") {
+    playerChoosesSquare(board);
+  } else {
+    computerChoosesSquare(board);
+  }
 };
 
 const alternatePlayer = () => {
@@ -214,11 +218,10 @@ while (true) {
 
   determineNumberOfGames();
   firstPlayer = determineFirstPlayer();
-  currentPlayer = firstPlayer;
 
   while (true) {
     let board = initializeBoard();
-
+    currentPlayer = firstPlayer;
     while (true) {
       displayBoard(board, scores);
       chooseSquare(board);
@@ -238,7 +241,7 @@ while (true) {
     }
 
     if (!someoneWonGame(scores)) {
-      prompt("Hit any key to start the next game");
+      prompt("Hit enter to start the next game");
       readline.prompt();
     }
 

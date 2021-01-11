@@ -16,9 +16,48 @@ const WINNING_LINES = [
 ];
 
 let winningScore;
-let currentPlayer = "Player";
+let firstPlayer;
+let currentPlayer;
 
 const prompt = (msg) => console.log(`-> ${msg}`);
+
+const determineNumberOfGames = () => {
+  console.clear();
+  prompt("How many games would you like to play?");
+
+  let response = readline.question();
+
+  while (!Number.isInteger(Number(response)) || !(Number(response) > 0)) {
+    prompt(
+      "How many games would you like to play?\nPlease enter a number greater than 0"
+    );
+    response = readline.question();
+  }
+  winningScore = Number(response);
+};
+
+const determineFirstPlayer = () => {
+  prompt("Who would you like to go  first?");
+  prompt("(1: Player) : (2: Computer)");
+  let answer = readline.question();
+  while (Number(answer) !== 1 && Number(answer) !== 2) {
+    prompt("Please enter either 1 or 2");
+    answer = readline.question();
+  }
+
+  return answer === "1" ? "Player" : "Computer";
+};
+
+const initializeBoard = () => {
+  currentPlayer = firstPlayer;
+  let board = {};
+
+  for (let square = 1; square <= 9; square++) {
+    board[String(square)] = INITIAL_MARKER;
+  }
+
+  return board;
+};
 
 const displayGameInfo = (scores) => {
   console.log(`You are ${HUMAN_MARKER} and Computer is ${COMPUTER_MARKER}`);
@@ -42,16 +81,6 @@ const displayBoard = (board, scores) => {
   console.log(`  ${board["7"]}  |  ${board["8"]}  |  ${board["9"]}`);
   console.log("     |     |");
   console.log("");
-};
-
-const initializeBoard = () => {
-  let board = {};
-
-  for (let square = 1; square <= 9; square++) {
-    board[String(square)] = INITIAL_MARKER;
-  }
-
-  return board;
 };
 
 const resetGameScores = (scores) => {
@@ -107,28 +136,28 @@ const computerChoosesRandom = (board) => {
 
 const computerChoosesSquare = (board) => {
   let square;
+
+  for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
+    let line = WINNING_LINES[idx];
+    square = findAtRiskSquare(line, board, COMPUTER_MARKER);
+    if (square) break;
+  }
+
   if (!square) {
     for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
       let line = WINNING_LINES[idx];
-      square = findAtRiskSquare(line, board, COMPUTER_MARKER);
+      square = findAtRiskSquare(line, board, HUMAN_MARKER);
       if (square) break;
     }
   }
-  for (let idx = 0; idx < WINNING_LINES.length; idx += 1) {
-    let line = WINNING_LINES[idx];
-    square = findAtRiskSquare(line, board, HUMAN_MARKER);
-    if (square) break;
-  }
-  if (!square && board["5"] === INITIAL_MARKER) square = "5";
 
+  if (!square && board["5"] === INITIAL_MARKER) square = "5";
   if (!square) square = computerChoosesRandom(board);
 
   board[square] = COMPUTER_MARKER;
 };
 
-const boardFull = (board) => {
-  return emptySquares(board).length === 0;
-};
+const boardFull = (board) => emptySquares(board).length === 0;
 
 const detectWinner = (board) => {
   for (let line = 0; line < WINNING_LINES.length; line++) {
@@ -150,46 +179,31 @@ const detectWinner = (board) => {
   return null;
 };
 
-const someoneWon = (board) => {
-  return detectWinner(board);
-};
+const someoneWonRound = (board) => detectWinner(board);
 
 const updateScore = (score, winner) => (score[winner] += 1);
 
-const determineNumberOfGames = () => {
-  console.clear();
-  prompt("How many games would you like to play?");
-
-  let response = readline.question();
-
-  while (!Number.isInteger(Number(response)) || !(Number(response) > 0)) {
-    prompt(
-      "How many games would you like to play?\nPlease enter a number greater than 0"
-    );
-    response = readline.question();
-  }
-  winningScore = Number(response);
+const chooseSquare = (board) => {
+  if (currentPlayer === "Player") playerChoosesSquare(board);
+  else computerChoosesSquare(board);
 };
 
-const chooseSquare = (board, currentPlayer) => {
-  return currentPlayer === "Player"
-    ? playerChoosesSquare(board)
-    : computerChoosesSquare(board);
-};
-
-const alternatePlayer = (currentPlayer) => {
+const alternatePlayer = () => {
   return currentPlayer === "Player" ? "Computer" : "Player";
 };
 
-const determineFirstPlayer = () => {
-  prompt("Who would you like to go  first?");
-  prompt("(1: Player) : (2: Computer)");
-  let answer = readline.question();
-  while (Number(answer) !== 1 && Number(answer) !== 2) {
-    prompt("Please enter either 1 or 2");
-    answer = readline.question();
+const someoneWonGame = (scores) => {
+  return scores.computer >= winningScore || scores.player >= winningScore;
+};
+
+const playAgainPrompt = () => {
+  prompt("Play again? (Y: Yes) (N: No)");
+  let answer = readline.question().toLowerCase();
+  while (answer !== "y" && answer !== "n") {
+    prompt("Please choose either Y: Yes or N: No");
+    answer = readline.question().toLowerCase();
   }
-  return answer === "1" ? "Player" : "Computer";
+  return answer;
 };
 
 while (true) {
@@ -199,21 +213,22 @@ while (true) {
   };
 
   determineNumberOfGames();
-  currentPlayer = determineFirstPlayer();
+  firstPlayer = determineFirstPlayer();
+  currentPlayer = firstPlayer;
 
   while (true) {
     let board = initializeBoard();
 
     while (true) {
       displayBoard(board, scores);
-      chooseSquare(board, currentPlayer);
-      if (someoneWon(board) || boardFull(board)) break;
-      currentPlayer = alternatePlayer(currentPlayer);
+      chooseSquare(board);
+      if (someoneWonRound(board) || boardFull(board)) break;
+      currentPlayer = alternatePlayer();
     }
 
     displayBoard(board, scores);
 
-    if (someoneWon(board)) {
+    if (someoneWonRound(board)) {
       let winner = detectWinner(board);
       updateScore(scores, winner.toLowerCase());
       displayBoard(board, scores);
@@ -222,19 +237,14 @@ while (true) {
       prompt("It's a tie!");
     }
 
-    if (scores.computer !== winningScore && scores.player !== winningScore) {
+    if (!someoneWonGame(scores)) {
       prompt("Hit any key to start the next game");
       readline.prompt();
     }
 
-    if (scores.computer >= winningScore || scores.player >= winningScore) {
-      prompt("Play again? (Y: Yes) (N: No)");
-      let answer = readline.question().toLowerCase();
-      while (answer !== "y" && answer !== "n") {
-        prompt("Please choose either Y: Yes or N: No");
-        answer = readline.question().toLowerCase();
-      }
-      if (answer === "n") break;
+    if (someoneWonGame(scores)) {
+      let playAgainResponse = playAgainPrompt();
+      if (playAgainResponse === "n") break;
       resetGameScores(scores);
     }
   }

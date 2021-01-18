@@ -1,0 +1,18 @@
+{
+  "name": "21",
+  "version": "1.0.0",
+  "description": "",
+  "main": "twentyOne.js",
+  "dependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.17.0",
+    "eslint-cli": "^1.1.1",
+    "readline-sync": "^1.4.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,6 +1,6 @@
 const readline = require("readline-sync");
 
-const SUITS = ["H", "D", "S", "C"];
+const SUITS = ["H", "S", "C", "D"];
 const VALUES = [
   "2",
   "3",
@@ -17,37 +17,9 @@ const VALUES = [
   "A",
 ];
 
-function prompt(message) {
-  console.log(`=> ${message}`);
-}
-
-// shuffle an array
-function shuffle(array) {
-  for (let first = array.length - 1; first > 0; first--) {
-    let second = Math.floor(Math.random() * (first + 1)); // random index from 0 to i
-    [array[first], array[second]] = [array[second], array[first]]; // swap elements
-  }
-
-  return array;
-}
-
-function initalizeDeck() {
-  let deck = [];
-
-  for (let suitIndex = 0; suitIndex < SUITS.length; suitIndex++) {
-    let suit = SUITS[suitIndex];
-
-    for (let valueIndex = 0; valueIndex < VALUES.length; valueIndex++) {
-      let value = VALUES[valueIndex];
-      deck.push([suit, value]);
-    }
-  }
-
-  return shuffle(deck);
-}
+const prompt = (message) => console.log(message);
 
 function total(cards) {
-  // cards = [['H', '3'], ['S', 'Q'], ... ]
   let values = cards.map((card) => card[1]);
 
   let sum = 0;
@@ -61,7 +33,6 @@ function total(cards) {
     }
   });
 
-  // correct for Aces
   values
     .filter((value) => value === "A")
     .forEach((_) => {
@@ -71,9 +42,31 @@ function total(cards) {
   return sum;
 }
 
-function busted(cards) {
+const shuffle = (array) => {
+  for (let index = array.length - 1; index > 0; index--) {
+    let otherIndex = Math.floor(Math.random() * (index + 1));
+    [array[index], array[otherIndex]] = [array[otherIndex], array[index]];
+  }
+
+  return array;
+};
+
+const initializeDeck = () => {
+  let deck = SUITS.map((suit) => {
+    return VALUES.map((value) => {
+      return [suit, value];
+    });
+  });
+  return shuffle(deck.flat(1));
+};
+
+const busted = (cards) => {
   return total(cards) > 21;
-}
+};
+
+const removeTwoFromDeck = (deck) => {
+  return [deck.pop(), deck.pop()];
+};
 
 function detectResult(dealerCards, playerCards) {
   let playerTotal = total(playerCards);
@@ -90,6 +83,17 @@ function detectResult(dealerCards, playerCards) {
   } else {
     return "TIE";
   }
+}
+
+function hand(cards) {
+  return cards.map((card) => `${card[1]}${card[0]}`).join(" ");
+}
+
+function playAgain() {
+  console.log("-------------");
+  prompt("Do you want to play again? (y or n)");
+  let answer = readline.question();
+  return answer.toLowerCase()[0] === "y";
 }
 
 function displayResults(dealerCards, playerCards) {
@@ -113,41 +117,28 @@ function displayResults(dealerCards, playerCards) {
   }
 }
 
-function playAgain() {
-  console.log("-------------");
-  prompt("Do you want to play again? (y or n)");
-  let answer = readline.question();
-  return answer.toLowerCase()[0] === "y";
-}
-
-function popTwoFromDeck(deck) {
-  return [deck.pop(), deck.pop()];
-}
-
-function hand(cards) {
-  return cards.map((card) => `${card[1]}${card[0]}`).join(" ");
-}
-
 while (true) {
-  prompt("Welcome to Twenty-One!");
-
-  // declare and initialize vars
-  let deck = initalizeDeck();
+  let deck = initializeDeck();
   let playerCards = [];
   let dealerCards = [];
 
-  // initial deal
-  playerCards.push(...popTwoFromDeck(deck));
-  dealerCards.push(...popTwoFromDeck(deck));
+  playerCards.push(...removeTwoFromDeck(deck));
+  dealerCards.push(...removeTwoFromDeck(deck));
 
+  console.clear();
+  prompt("How many games would you like to play to?");
+  let answer = readline.prompt();
+  while (Number.isNaN(answer) || !Number(answer)) {
+    prompt("Please input a number greater than 0");
+    answer = readline.prompt();
+  }
+  console.clear();
   prompt(`Dealer has ${dealerCards[0]} and ?`);
   prompt(
     `You have: ${playerCards[0]} and ${playerCards[1]}, for a total of ${total(
       playerCards
     )}.`
   );
-
-  // player turn
   while (true) {
     let playerTurn;
     while (true) {
